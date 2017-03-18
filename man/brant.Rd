@@ -20,7 +20,7 @@ OPTIONAL if set to true, the tests are made for each variable instead of each co
 }
 }
 \details{
-  The function calculates the brant test for parallel regression assumption. The brant test was published by Brant (1990). The function works with models generated with the function polr() from the package MASS.
+  The function calculates the brant test for parallel regression assumption. The brant test was published by Brant (1990). The function works with models generated with the function polr() from the package 'MASS'.
 }
 \value{
   The output is the brant test, which shows if the parallel assumption holds or not.
