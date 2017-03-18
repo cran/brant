@@ -1,0 +1,3 @@
+import("MASS")
+importFrom("stats", "coef", "formula", "glm", "pchisq", "vcov")
+export(brant)
