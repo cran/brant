@@ -19,5 +19,6 @@ print.testresult <- function(model,X2,df.v,by.var) {
     tabs.sub = ceiling(nchar(name)/7)-1
     cat(paste0(name,paste0(rep("\t",n.tabs-tabs.sub),collapse = ""),round(X2[i+1],digits=2),"\t",df.v[i+1],"\t",round(p.values[i+1],digits=2),"\n"))
   }
-  cat(paste0(rep("-",28+8*n.tabs),collapse = ""),"\n")
+  cat(paste0(rep("-",28+8*n.tabs),collapse = ""),"\n\n")
+  cat("H0: Parallel Regression Assumption holds")
 }

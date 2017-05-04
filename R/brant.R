@@ -111,7 +111,10 @@ brant <- function(model,by.var=F){
       s = sort(s)
       Ds = D[,s]
       Ds = Ds[which(!apply(Ds==0,1,all)),]
-      X2 = c(X2,t(Ds%*%betaStar[s]) %*% solve(Ds %*% varBeta[s,s] %*% t(Ds)) %*% (Ds %*% betaStar[s]))
+      if(!is.null(dim(Ds)))
+        X2 = c(X2,t(Ds%*%betaStar[s]) %*% solve(Ds %*% varBeta[s,s] %*% t(Ds)) %*% (Ds %*% betaStar[s]))
+      else
+        X2 = c(X2,t(Ds%*%betaStar[s]) %*% solve(Ds %*% varBeta[s,s] %*% t(t(Ds))) %*% (Ds %*% betaStar[s]))
       df.v = c(df.v,df.v.temp)
     }
   }else{
@@ -119,7 +122,10 @@ brant <- function(model,by.var=F){
       s = seq(from=k,to=K*(J-1),by=K)
       Ds = D[,s]
       Ds = Ds[which(!apply(Ds==0,1,all)),]
-      X2 = c(X2,t(Ds%*%betaStar[s]) %*% solve(Ds %*% varBeta[s,s] %*% t(Ds)) %*% (Ds %*% betaStar[s]))
+      if(!is.null(dim(Ds)))
+        X2 = c(X2,t(Ds%*%betaStar[s]) %*% solve(Ds %*% varBeta[s,s] %*% t(Ds)) %*% (Ds %*% betaStar[s]))
+      else
+        X2 = c(X2,t(Ds%*%betaStar[s]) %*% solve(Ds %*% varBeta[s,s] %*% t(t(Ds))) %*% (Ds %*% betaStar[s]))
       df.v = c(df.v,J-2)
     }
   }
