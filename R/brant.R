@@ -60,11 +60,11 @@ brant <- function(model,by.var=F){
   varBeta = matrix(NA,nrow = (J-1)*K, ncol = (J-1)*K)
   for(m in 1:(J-2)){
     for(l in (m+1):(J-1)){
-      Wml = diag(pi.hat[,l] - pi.hat[,m]*pi.hat[,l])
-      Wm = diag(pi.hat[,m] - pi.hat[,m]*pi.hat[,m])
-      Wl = diag(pi.hat[,l] - pi.hat[,l]*pi.hat[,l])
+      Wml = Matrix::Diagonal(x=pi.hat[,l] - pi.hat[,m]*pi.hat[,l])
+      Wm = Matrix::Diagonal(x=pi.hat[,m] - pi.hat[,m]*pi.hat[,m])
+      Wl = Matrix::Diagonal(x=pi.hat[,l] - pi.hat[,l]*pi.hat[,l])
       Xt = t(X)
-      varBeta[((m-1)*K+1):(m*K),((l-1)*K+1):(l*K)] = (solve(Xt %*% Wm %*% X)%*%(Xt %*% Wml %*% X)%*%solve(Xt %*% Wl %*% X))[-1,-1]
+      varBeta[((m-1)*K+1):(m*K),((l-1)*K+1):(l*K)] = as.matrix((solve(Xt %*% Wm %*% X)%*%(Xt %*% Wml %*% X)%*%solve(Xt %*% Wl %*% X))[-1,-1])
       varBeta[((l-1)*K+1):(l*K),((m-1)*K+1):(m*K)] = varBeta[((m-1)*K+1):(m*K),((l-1)*K+1):(l*K)]
     }
   }
@@ -130,8 +130,9 @@ brant <- function(model,by.var=F){
     }
   }
   
-  print.testresult(model,X2,df.v,by.var)
+  result.matrix = print.testresult(model,X2,df.v,by.var)
   if(count0!=0){
     warning(paste0(count0," combinations in table(dv,ivs) do not occur. Because of that, the test results might be invalid."))
   }
+  result.matrix
 }

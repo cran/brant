@@ -1,6 +1,6 @@
-f8f211a575ce97541afef7aec4810b31 *DESCRIPTION
-764c1513a8c7882896ba02acc3b1c183 *NAMESPACE
-733d618251e8a186c3e2d3b383db937a *R/brant.R
+d159ed97e16bd79169e0c5bb44c8e13a *DESCRIPTION
+0d97b7ebde1c8c903ee5b454c8d2c4f6 *NAMESPACE
+a1e780cf1bf6057819d9bb4aef8afa23 *R/brant.R
 074badbf4470881094e3e64e4769813e *R/getCombiCoefs.R
-5b76843fba8e1abbe4859e6cc669e519 *R/print.testresults.R
+acbbcf81a802ccf7f03c571d7f92dcec *R/print.testresults.R
 899fbbb18bdadd291f36a09b76a00ef1 *man/brant.Rd

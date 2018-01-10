@@ -21,4 +21,8 @@ print.testresult <- function(model,X2,df.v,by.var) {
   }
   cat(paste0(rep("-",28+8*n.tabs),collapse = ""),"\n\n")
   cat("H0: Parallel Regression Assumption holds")
+  result.matrix = matrix(c(X2, df.v, p.values), ncol = 3)
+  rownames(result.matrix) = c("Omnibus", var.names)
+  colnames(result.matrix) = c("X2","df","probability")
+  result.matrix
 }
