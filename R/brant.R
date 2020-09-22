@@ -1,21 +1,32 @@
 brant <- function(model,by.var=F){
-  temp.data = model$model
-  y_name = as.character(formula(model))[2]
-  x_names = as.character(formula(model))[3]
-  y = as.numeric(temp.data[[y_name]])
-  temp.data$y = y
+  m_model <- model$call
+  if (is.matrix(eval.parent(m_model$data))) 
+    m_model$data <- as.data.frame(data)
+  m_model[-which(names(m_model) %in% c("", "formula", "data"))] <- NULL
+  m_model[[1L]] <- quote(stats::model.frame)
+  m_model <- eval.parent(m_model)
+  Terms <- attr(m_model, "terms")
+  x <- model.matrix(Terms, m_model)
+  xint <- match("(Intercept)", colnames(x), nomatch = 0L)
+  x <- x[, -xint, drop = FALSE]
+  y <- as.numeric(model.response(m_model))
+  x.variables = names(m_model)[-1]
+  temp.data = data.frame(m_model, y)
+  if(grepl(":",paste0(colnames(x), collapse = "")) & by.var){
+    by.var = FALSE
+    warning("by.var = TRUE currently not supported for interactions, setting by.var to FALSE")
+  }
   
-  x.variables = strsplit(x_names," \\+ ")[[1]]
   x.factors = c()
-  for(name in x.variables){
-    if(!is.numeric(temp.data[,name])){
-      x.factors = c(x.factors,name)
+  for (name in x.variables) {
+    if (!is.numeric(m_model[, name])) {
+      x.factors = c(x.factors, name)
     }
   }
-  if(length(x.factors)>0){
-    tab = table(data.frame(temp.data[,y_name],temp.data[,x.factors]))
-    count0 = sum(tab==0)
-  }else{
+  if (length(x.factors) > 0) {
+    tab = table(data.frame(temp.data$y, m_model[,x.factors]))
+    count0 = sum(tab == 0)
+  }else {
     count0 = 0
   }
   
@@ -29,27 +40,13 @@ brant <- function(model,by.var=F){
   beta.hat = matrix(NA,nrow=J-1,ncol=K+1,byrow=T)
   var.hat = list()
   for(m in 1:(J-1)){
-    mod = glm(paste0("z",m," ~ ",x_names),data=temp.data, family="binomial")
+    mod = glm(paste0("z",m," ~ ",as.character(formula(model)[3])),data=temp.data, family="binomial")
     binary.models[[paste0("model",m)]] = mod
     beta.hat[m,] = coef(mod)
     var.hat[[m]] = vcov(mod)
   }
   
-  X.temp = model$model[2:length(model$model)]
-  X = matrix(1,nrow=length(X.temp[,1]),ncol=1)
-  for(var in X.temp){
-    if(is.numeric(var)){
-      X = cbind(X,var)
-    }
-    if(is.character(var)){
-      var = as.factor(var)
-    }
-    if(is.factor(var)){
-      for(level in levels(var)[2:length(levels(var))]){
-        X = cbind(X,ifelse(var==level,1,0))
-      }
-    }
-  }
+  X = cbind(1, x)
   tau = matrix(model$zeta,nrow=1,ncol=J-1,byrow=T)
   pi.hat = matrix(NA,nrow=length(model$model[,1]),ncol=J-1,byrow=T)
   for(m in 1:(J-1)){
@@ -110,7 +107,9 @@ brant <- function(model,by.var=F){
       }
       s = sort(s)
       Ds = D[,s]
-      Ds = Ds[which(!apply(Ds==0,1,all)),]
+      if (!is.null(dim(Ds))){
+        Ds = Ds[which(!apply(Ds == 0, 1, all)), ]
+      }
       if(!is.null(dim(Ds)))
         X2 = c(X2,t(Ds%*%betaStar[s]) %*% solve(Ds %*% varBeta[s,s] %*% t(Ds)) %*% (Ds %*% betaStar[s]))
       else
@@ -121,7 +120,9 @@ brant <- function(model,by.var=F){
     for(k in 1:K){
       s = seq(from=k,to=K*(J-1),by=K)
       Ds = D[,s]
-      Ds = Ds[which(!apply(Ds==0,1,all)),]
+      if (!is.null(dim(Ds))){
+        Ds = Ds[which(!apply(Ds == 0, 1, all)), ]
+      }
       if(!is.null(dim(Ds)))
         X2 = c(X2,t(Ds%*%betaStar[s]) %*% solve(Ds %*% varBeta[s,s] %*% t(Ds)) %*% (Ds %*% betaStar[s]))
       else
@@ -134,5 +135,5 @@ brant <- function(model,by.var=F){
   if(count0!=0){
     warning(paste0(count0," combinations in table(dv,ivs) do not occur. Because of that, the test results might be invalid."))
   }
-  result.matrix
+  invisible(result.matrix)
 }

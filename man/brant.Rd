@@ -5,12 +5,12 @@
 Brant Test
 }
 \description{
-The function calculates the brant test for  ordinal logit models to test the parallel regression assumption.
+The function calculates the brant test by Brant (1990) <doi: 10.2307/2532457> for ordinal logit models to test the parallel regression assumption.
 }
 \usage{
 brant(model,by.var=F)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{model}{
 the polr-Object generated with polr()
@@ -42,4 +42,8 @@ brant(model1)
 Brant, R. (1990) Assessing proportionality in the proportional odds model for ordinal logistic regression. \emph{Biometrics},  \bold{46}, 1171--1178.
 }
 
-\keyword{ models, brant, brant test, parallel regression assumption, ordinal logit }
+\keyword{ models }
+\concept{ brant }
+\concept{ brant test }
+\concept{ parallel regression assumption }
+\concept{ ordinal logit }

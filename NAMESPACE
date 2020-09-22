@@ -1,3 +1,4 @@
 import("MASS","Matrix")
-importFrom("stats", "coef", "formula", "glm", "pchisq", "vcov")
+importFrom("stats", "coef", "formula", "glm", "pchisq", "vcov", "model.matrix", "model.response", "var")
+importFrom("utils", "data")
 export(brant)
